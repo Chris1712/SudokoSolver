@@ -13,6 +13,7 @@ namespace SudokuSolver
     public partial class Form1 : Form
     {
         TextBox[,] textBoxArray;
+        SudokoGrid formSudoku;
 
         public Form1()
         {
@@ -33,9 +34,6 @@ namespace SudokuSolver
                     tableLayoutPanel1.Controls.Add(myTextBox, j, i);
                 }
             }
-
-            
-
         }
 
         void ResetTextBoxes()
@@ -53,5 +51,38 @@ namespace SudokuSolver
         {
             ResetTextBoxes();
         }
+
+        private void buttonSolve_Click(object sender, EventArgs e)
+        {
+            var formCharArray = new char[9, 9];
+            for (int i = 0; i < 9; i++)
+            {
+                for (int j = 0; j < 9; j++)
+                {
+                    if (textBoxArray[i, j].Text == "")
+                    {
+                        formCharArray[i, j] = ' ';
+                    }
+                    else
+                    {
+                        formCharArray[i, j] = textBoxArray[i, j].Text[0];
+                    }
+                }
+            }
+
+            formSudoku = new SudokoGrid(formCharArray);
+        }
+
+        private void OutputSudokuToTextBoxes(SudokoGrid inputGrid)
+        {
+            for (int i = 0; i < 9; i++)
+            {
+                for (int j = 0; j < 9; j++)
+                {
+                    textBoxArray[i, j].Text = Convert.ToString(inputGrid.GetNumber(i, j));
+                }
+            }
+        }
+
     }
 }

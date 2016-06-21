@@ -69,6 +69,7 @@
             this.buttonSolve.TabIndex = 1;
             this.buttonSolve.Text = "Solve";
             this.buttonSolve.UseVisualStyleBackColor = false;
+            this.buttonSolve.Click += new System.EventHandler(this.buttonSolve_Click);
             // 
             // buttonReset
             // 
