@@ -12,10 +12,12 @@ namespace SudokuSolver
 {
     public partial class Form1 : Form
     {
+        TextBox[,] textBoxArray;
+
         public Form1()
         {
             InitializeComponent();
-            var textBoxArray = new TextBox[9,9];
+            textBoxArray = new TextBox[9, 9];
 
             for (int i = 0; i < 9; i++)
             {
@@ -36,6 +38,20 @@ namespace SudokuSolver
 
         }
 
+        void ResetTextBoxes()
+        {
+            for (int i = 0; i < 9; i++)
+            {
+                for (int j = 0; j < 9; j++)
+                {
+                    textBoxArray[i, j].Text = "";
+                }
+            }
+        }
 
+        private void buttonReset_Click(object sender, EventArgs e)
+        {
+            ResetTextBoxes();
+        }
     }
 }
