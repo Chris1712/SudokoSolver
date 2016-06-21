@@ -13,7 +13,7 @@ namespace SudokuSolver
     public partial class Form1 : Form
     {
         TextBox[,] textBoxArray;
-        SudokoGrid formSudoku;
+        SudokoGrid savedSudoku;
 
         public Form1()
         {
@@ -36,15 +36,15 @@ namespace SudokuSolver
             }
         }
 
-        void ResetTextBoxes()
+        private void buttonSave_Click(object sender, EventArgs e)
         {
-            for (int i = 0; i < 9; i++)
-            {
-                for (int j = 0; j < 9; j++)
-                {
-                    textBoxArray[i, j].Text = "";
-                }
-            }
+            savedSudoku = GetSudokuGridFromTextBoxes();
+        }
+        private void buttonLoad_Click(object sender, EventArgs e)
+        {
+            if (savedSudoku == null)
+                return;
+            OutputSudokuToTextBoxes(savedSudoku);
         }
 
         private void buttonReset_Click(object sender, EventArgs e)
@@ -54,7 +54,15 @@ namespace SudokuSolver
 
         private void buttonSolve_Click(object sender, EventArgs e)
         {
+            // GetSudokuGridFromTextBoxes().RecursiveSolve();
+        }
+
+
+
+        private SudokoGrid GetSudokuGridFromTextBoxes()
+        {
             var formCharArray = new char[9, 9];
+
             for (int i = 0; i < 9; i++)
             {
                 for (int j = 0; j < 9; j++)
@@ -70,9 +78,20 @@ namespace SudokuSolver
                 }
             }
 
-            formSudoku = new SudokoGrid(formCharArray);
+            var mySudokuGrid = new SudokoGrid(formCharArray);
+            return mySudokuGrid;
         }
 
+        private void ResetTextBoxes()
+        {
+            for (int i = 0; i < 9; i++)
+            {
+                for (int j = 0; j < 9; j++)
+                {
+                    textBoxArray[i, j].Text = "";
+                }
+            }
+        }
         private void OutputSudokuToTextBoxes(SudokoGrid inputGrid)
         {
             for (int i = 0; i < 9; i++)
@@ -83,6 +102,7 @@ namespace SudokuSolver
                 }
             }
         }
+
 
     }
 }
