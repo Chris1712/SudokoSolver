@@ -13,7 +13,7 @@ namespace SudokuSolver
     public partial class Form1 : Form
     {
         TextBox[,] textBoxArray;
-        SudokoGrid savedSudoku;
+        SudokuGrid savedSudoku;
 
         public Form1()
         {
@@ -54,19 +54,19 @@ namespace SudokuSolver
 
         private void buttonSolve_Click(object sender, EventArgs e)
         {
-            var SudokoGridToSolve = GetSudokuGridFromTextBoxes();
-            if (!SudokoGridToSolve.IsValid)
+            var SudokuGridToSolve = GetSudokuGridFromTextBoxes();
+            if (!SudokuGridToSolve.IsValid)
             {
                 MessageBox.Show("Invalid sudoku");
             }
             else
             {
-                OutputSudokuToTextBoxes(SudokoGrid.RecursiveSolve(SudokoGridToSolve));
+                OutputSudokuToTextBoxes(SudokuGrid.RecursiveSolve(SudokuGridToSolve));
             }
             
         }
 
-        private SudokoGrid GetSudokuGridFromTextBoxes()
+        private SudokuGrid GetSudokuGridFromTextBoxes()
         {
             var formCharArray = new char[9, 9];
 
@@ -85,7 +85,7 @@ namespace SudokuSolver
                 }
             }
 
-            var mySudokuGrid = new SudokoGrid(formCharArray);
+            var mySudokuGrid = new SudokuGrid(formCharArray);
             return mySudokuGrid;
         }
         private void ResetTextBoxes()
@@ -98,7 +98,7 @@ namespace SudokuSolver
                 }
             }
         }
-        private void OutputSudokuToTextBoxes(SudokoGrid inputGrid)
+        private void OutputSudokuToTextBoxes(SudokuGrid inputGrid)
         {
             for (int i = 0; i < 9; i++)
             {

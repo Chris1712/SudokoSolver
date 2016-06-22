@@ -6,12 +6,12 @@ using System.Threading.Tasks;
 
 namespace SudokuSolver
 {
-    class SudokoGrid
+    class SudokuGrid
     {
         public readonly char[,] sudokuArray;
         string allowedChars = " 123456789";
 
-        public SudokoGrid(char[,] array)
+        public SudokuGrid(char[,] array)
         {
             sudokuArray = new char[9, 9];
 
@@ -158,7 +158,7 @@ namespace SudokuSolver
             }
         }
 
-        public static SudokoGrid RecursiveSolve(SudokoGrid gridToSolve)
+        public static SudokuGrid RecursiveSolve(SudokuGrid gridToSolve)
         {
             if (!gridToSolve.IsValid)
             {
@@ -180,7 +180,7 @@ namespace SudokuSolver
                 sudokuGridToAmend[nextPosTuple.Item1, nextPosTuple.Item2] = possibleEntry;
 
                 // Recursion is magic!
-                var newGridToSolve = new SudokoGrid(sudokuGridToAmend);
+                var newGridToSolve = new SudokuGrid(sudokuGridToAmend);
                 var solvedGrid = RecursiveSolve(newGridToSolve);
 
                 if (solvedGrid != null)
