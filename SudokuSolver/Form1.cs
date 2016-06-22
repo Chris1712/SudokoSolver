@@ -54,7 +54,14 @@ namespace SudokuSolver
 
         private void buttonSolve_Click(object sender, EventArgs e)
         {
-            // GetSudokuGridFromTextBoxes().RecursiveSolve();
+            var SudokoGridToSolve = GetSudokuGridFromTextBoxes();
+            if (!SudokoGridToSolve.IsValid)
+            {
+                MessageBox.Show("Invalid sudoku");
+            }
+
+            // todo : suggest next place to go in a messagebox MessageBox.Show()
+            
         }
 
 

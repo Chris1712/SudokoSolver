@@ -33,6 +33,59 @@ namespace SudokuSolver
             }
         }
 
+        public Tuple<int,int,List<Char>> NextPositionToPopulate()
+        {
+            // figure out where in the grid we have the most information
+            // for empty squares, which has largest count of nonempty (row entries, col entries, subsquare entries)
+            // this should return a location ( int[,]) and a list of values  to try
+            var ShortestPossibleEntryList = new List<Char> { '1', '2', '3', '4', '5', '6', '7', '8', '9', ' ' }; // has 10 elts so will always be beaten
+            int iPositionToPopulate = 0; int jPositionToPopulate = 0;
+
+
+            for (int i = 0; i < 9; i++)
+            {
+                for (int j = 0; j < 9; j++)
+                {
+                    if ((sudokuArray[i, j]) != ' ')
+                        continue;
+                    var possibleEntries = new List<Char> { '1', '2', '3', '4', '5', '6', '7', '8', '9' };
+
+                    // Strike out anything in this position's row
+                    for (int k = 0; k < 8; k++)
+                    {
+                        possibleEntries.Remove(sudokuArray[i, k]);
+                    }
+                    // Strike out anything in this position's col
+                    for (int k = 0; k < 8; k++)
+                    {
+                        possibleEntries.Remove(sudokuArray[k, j]);
+                    }
+                    // Strike out anything in this position's subsquare
+                    int x = i / 3; int y = j / 3; // the row and col of the subsquare we're in.
+
+                    for (int subSquarei = 0; subSquarei < 3; subSquarei++)
+                    {
+                        for (int subSquarej = 0; subSquarej < 3; subSquarej++)
+                        {
+                            possibleEntries.Remove(sudokuArray[(3 * x) + subSquarei, (3 * y) + subSquarej]);
+                        }
+                    }
+
+                    // We've now removed everything from possibleEntries that we can.
+                    if (possibleEntries.Count() < ShortestPossibleEntryList.Count)
+                    {
+                        ShortestPossibleEntryList = new List<Char>(possibleEntries);
+                        iPositionToPopulate = i; jPositionToPopulate = j;
+
+                    }
+
+
+                }
+            }
+
+            return Tuple.Create(iPositionToPopulate, jPositionToPopulate, ShortestPossibleEntryList);
+        }
+
         public bool IsComplete {
             get
             {
@@ -51,13 +104,10 @@ namespace SudokuSolver
 
 
         }
-
         public bool IsValid
         {
             get
             {
-                // todo, possible efficiency; while computing this keep track of which row/square/col has greatest # of entries, use as place to enter next
-
                 // Check rows have no repeated values:
                 for (int i = 0; i < 9; i++)
                 {
@@ -88,72 +138,28 @@ namespace SudokuSolver
                 }
 
                 // Check subsquares have no repeated values:
-                var squareEntries = new List<char>();
-                // 0,0 -> 2,2
-                for (int i = 0; i < 3; i++)
+                for (int x = 0; x < 3; x++)
                 {
-                    for (int j = 0; j < 3; j++)
+                    for (int y = 0; y < 3; y++)
                     {
-                        if (sudokuArray[i, j] == ' ')
-                            continue;
-                        if (squareEntries.Contains(sudokuArray[i, j]))
-                            return false;
-                        else
-                            squareEntries.Add(sudokuArray[i, j]);
+                        // We are in the subsquare row x col y
+                        var squareEntries = new List<char>();
+                        for (int i = 0; i < 3; i++)
+                        {
+                            for (int j = 0; j < 3; j++)
+                            {
+                                if (sudokuArray[(3*x) + i, (3*y)+j] == ' ')
+                                    continue;
+                                if (squareEntries.Contains(sudokuArray[(3 * x) + i, (3 * y) + j]))
+                                    return false;
+                                else
+                                    squareEntries.Add(sudokuArray[(3 * x) + i, (3 * y) + j]);
+                            }
+                        }
+
                     }
                 }
-                // 0,6 -> 2,8
-                for (int i = 0; i < 3; i++)
-                {
-                    for (int j = 6; j < 9; j++)
-                    {
-                        if (sudokuArray[i, j] == ' ')
-                            continue;
-                        if (squareEntries.Contains(sudokuArray[i, j]))
-                            return false;
-                        else
-                            squareEntries.Add(sudokuArray[i, j]);
-                    }
-                }
-                // 3,3 -> 5,5
-                for (int i = 3; i < 6; i++)
-                {
-                    for (int j = 3; j < 6; j++)
-                    {
-                        if (sudokuArray[i, j] == ' ')
-                            continue;
-                        if (squareEntries.Contains(sudokuArray[i, j]))
-                            return false;
-                        else
-                            squareEntries.Add(sudokuArray[i, j]);
-                    }
-                }
-                // 6,0 -> 8,2
-                for (int i = 6; i < 9; i++)
-                {
-                    for (int j = 0; j < 3; j++)
-                    {
-                        if (sudokuArray[i, j] == ' ')
-                            continue;
-                        if (squareEntries.Contains(sudokuArray[i, j]))
-                            return false;
-                        else
-                            squareEntries.Add(sudokuArray[i, j]);
-                    }
-                }
-                // 6,6 -> 8,8
-                for (int i = 6; i < 9; i++)
-                {
-                    for (int j = 6; j < 9; j++)
-                    {
-                        if (sudokuArray[i, j] == ' ')
-                            continue;
-                        if (squareEntries.Contains(sudokuArray[i, j]))
-                            return false;
-                        else
-                            squareEntries.Add(sudokuArray[i, j]);
-                    }
-                }
+                
 
                 return true;
             }
