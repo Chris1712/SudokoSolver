@@ -8,13 +8,8 @@ namespace SudokuSolver
 {
     class SudokoGrid
     {
-        char[,] sudokuArray;
+        public readonly char[,] sudokuArray;
         string allowedChars = " 123456789";
-
-        public char GetNumber(int row, int col)
-        {
-            return sudokuArray[row, col];
-        }
 
         public SudokoGrid(char[,] array)
         {
@@ -37,7 +32,7 @@ namespace SudokuSolver
         {
             // figure out where in the grid we have the most information
             // for empty squares, which has largest count of nonempty (row entries, col entries, subsquare entries)
-            // this should return a location ( int[,]) and a list of values  to try
+            // this returns a location ( int[,]) and a list of values  to try
             var ShortestPossibleEntryList = new List<Char> { '1', '2', '3', '4', '5', '6', '7', '8', '9', ' ' }; // has 10 elts so will always be beaten
             int iPositionToPopulate = 0; int jPositionToPopulate = 0;
 
@@ -78,8 +73,6 @@ namespace SudokuSolver
                         iPositionToPopulate = i; jPositionToPopulate = j;
 
                     }
-
-
                 }
             }
 
@@ -165,6 +158,39 @@ namespace SudokuSolver
             }
         }
 
+        public static SudokoGrid RecursiveSolve(SudokoGrid gridToSolve)
+        {
+            if (!gridToSolve.IsValid)
+            {
+                return null;
+            }
+            if (gridToSolve.IsComplete)
+            {
+                return gridToSolve;
+            }
 
+            // So we have a grid that's incomplete and might have solutions, so:
+            var nextPosTuple = gridToSolve.NextPositionToPopulate();
+
+            foreach (var possibleEntry in nextPosTuple.Item3)
+            {
+                var sudokuGridToAmend = new char[9, 9];
+                Array.Copy(gridToSolve.sudokuArray, sudokuGridToAmend, 81);
+
+                sudokuGridToAmend[nextPosTuple.Item1, nextPosTuple.Item2] = possibleEntry;
+
+                // Recursion is magic!
+                var newGridToSolve = new SudokoGrid(sudokuGridToAmend);
+                var solvedGrid = RecursiveSolve(newGridToSolve);
+
+                if (solvedGrid != null)
+                {
+                    return solvedGrid;
+                }
+            }
+
+            // Otherwise the grid we've been given has no solutions, so
+            return null;
+        }
     }
 }

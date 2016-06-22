@@ -61,24 +61,9 @@ namespace SudokuSolver
             }
             else
             {
-                //MessageBox.Show("Go in these coords:" + SudokoGridToSolve.NextPositionToPopulate().Item1 + "," + SudokoGridToSolve.NextPositionToPopulate().Item2);
+                OutputSudokuToTextBoxes(SudokoGrid.RecursiveSolve(SudokoGridToSolve));
             }
             
-        }
-
-        private SudokoGrid RecursiveSolve(SudokoGrid gridToSolve)
-        {
-            // todo: put this as a static method in the sudokugrid class? Not really part of the form logic
-
-            // check if grid is valid, if not return null
-            // check if grid is complete, if it is, return that grid
-
-            // else we have a grid that's incomplete and might have solutions, so:
-            // get the next place to play from the nextpositiontopopulate method, and call self with that for all suggested values. If any of those return a grid, stop and return it.
-            
-            
-            // otherwise the grid we've been given has no solutions, so
-            return null;
         }
 
         private SudokoGrid GetSudokuGridFromTextBoxes()
@@ -119,7 +104,7 @@ namespace SudokuSolver
             {
                 for (int j = 0; j < 9; j++)
                 {
-                    textBoxArray[i, j].Text = Convert.ToString(inputGrid.GetNumber(i, j));
+                    textBoxArray[i, j].Text = Convert.ToString(inputGrid.sudokuArray[i, j]);
                 }
             }
         }
