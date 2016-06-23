@@ -46,12 +46,10 @@ namespace SudokuSolver
                 return;
             OutputSudokuToTextBoxes(savedSudoku);
         }
-
         private void buttonReset_Click(object sender, EventArgs e)
         {
             ResetTextBoxes();
         }
-
         private void buttonSolve_Click(object sender, EventArgs e)
         {
             var SudokuGridToSolve = GetSudokuGridFromTextBoxes();
@@ -64,6 +62,10 @@ namespace SudokuSolver
                 OutputSudokuToTextBoxes(SudokuGrid.RecursiveSolve(SudokuGridToSolve));
             }
             
+        }
+        private void buttonRandomise_Click(object sender, EventArgs e)
+        {
+            RandomiseTextBoxes(0.03);
         }
 
         private SudokuGrid GetSudokuGridFromTextBoxes()
@@ -105,6 +107,20 @@ namespace SudokuSolver
                 for (int j = 0; j < 9; j++)
                 {
                     textBoxArray[i, j].Text = Convert.ToString(inputGrid.sudokuArray[i, j]);
+                }
+            }
+        }
+        private void RandomiseTextBoxes(double density)
+        {
+            var myRand = new Random();
+            for (int i = 0; i < 9; i++)
+            {
+                for (int j = 0; j < 9; j++)
+                {
+                    if (myRand.NextDouble() < density)
+                    {
+                        textBoxArray[i, j].Text = myRand.Next(1, 10).ToString();
+                    }
                 }
             }
         }
